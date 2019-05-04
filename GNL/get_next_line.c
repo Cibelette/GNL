@@ -3,60 +3,68 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: cibyl <cibyl@student.42.fr>                +#+  +:+       +#+        */
+/*   By: clagier <clagier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:34:24 by cibyl             #+#    #+#             */
-/*   Updated: 2019/05/02 14:11:36 by cibyl            ###   ########.fr       */
+/*   Updated: 2019/05/04 15:14:54 by clagier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-
-#define BUF_SIZE 5
-
-typedef struct node
-{
-    char data;
-    struct node *p_next;
-    struct  node *p_prev;
-}Dnode;
-
-typedef struct dlist
-{
-    size_t  length;
-    struct node *p_tail;
-    struct node *p_head;
-}Dlist;
-
-
-Dlist *dlist_new(void)
-{
-    Dlist *p_new = malloc(sizeof *p_new);
-    if (p_new != NULL)
-    {
-        p_new->length = 0;
-        p_new->p_head = NULL;
-        p_new->p_tail = NULL;
-    }
-    return (p_new);
-}
+#include <stdio.h>
 
 int get_next_line(const int fd, char **line)
 {
-    char *buf[BUF_SIZE + 1];
-    int ret;
-    int i;
-    dlist *file;
+    char    buf[BUF_SIZE + 1];
+    static  char    *rest;
+    char    *ligne;
+    int     ret;
+    size_t    i;
+    char j;
 
-    i = 0;
-    file = dlist_new();
-
-    while (ret = read(fd, buf, BUF_SIZE));
+    i = 1;
+    if (rest == NULL)
     {
-        line = ft_strsplit (ret, '/n');
-        while (line)
-        {
-            
-        }
+        ret = read(fd, buf, BUF_SIZE);
+        buf[ret] = '\0';
+        rest = ft_strdup(buf);
     }
+    while (rest[i - 1 ] != '\n')
+    {
+        if (rest[i] == '\0')
+        {   
+            ret = read (fd, buf, BUF_SIZE);
+            rest = ft_strjoin(rest, buf);
+        }
+        i++;
+    }
+    if (rest[i - 1] == '\n')
+    {
+        ligne = strndup(rest, i);
+        rest = strchr(rest , (int)'\n');
+        rest = ft_strtrim(rest);
+    }
+     printf("ligne = %s\n", ligne);
+    return (0);
+}
+
+
+int main()
+{
+    char **line;
+    int fd;
+
+    fd = open ("ABC", O_RDONLY);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    get_next_line(fd, line);
+    return (0);
+
 }
