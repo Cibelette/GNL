@@ -6,7 +6,7 @@
 /*   By: clagier <clagier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/04/25 16:58:02 by clagier           #+#    #+#             */
-/*   Updated: 2019/05/06 14:21:33 by clagier          ###   ########.fr       */
+/*   Updated: 2019/05/09 15:19:20 by clagier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,6 @@
 # include <sys/types.h>
 # include <sys/stat.h>
 # include <fcntl.h>
-
-# define BUF_SIZE 5
 
 typedef struct node
 {
