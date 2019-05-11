@@ -6,7 +6,7 @@
 /*   By: clagier <clagier@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/05/02 13:34:24 by cibyl             #+#    #+#             */
-/*   Updated: 2019/05/09 17:25:35 by clagier          ###   ########.fr       */
+/*   Updated: 2019/05/11 16:41:54 by clagier          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,8 @@ int get_next_line(const int fd, char **line)
     int     ret;
     size_t    i;
 
+	if (fd < 0 || fd > 1024 )
+		return (-1);
 	ligne = NULL;
 	tmp = NULL;
 	while (ligne == NULL)
@@ -44,7 +46,8 @@ int get_next_line(const int fd, char **line)
 		i = 0; 
 		if (tmp == NULL)
 		{
-   	    	ret = read(fd, buf, BUFF_SIZE);
+   	    	if((ret = read(fd, buf, BUFF_SIZE)) == -1)
+			   	return (-1);
 			buf[ret] = '\0';
 			if (buf[0] == 0)
 			{	
@@ -55,10 +58,16 @@ int get_next_line(const int fd, char **line)
 					ligne = ft_strnew(i + 1);
 					ligne = strncpy(ligne, rest, i);
 					*line = ligne;
+					if (rest[0] == '\0')
+						return (0);
 					if(rest[i] != '\0')
 						rest = ft_strcpy(rest, rest + (i + 1));
-					else 
+					else
+					{	
+						if (rest[i - 1] == '\n' && rest[i] == '\n' && rest [i - 2] != '\n')
+							return (0);
 						rest = NULL;
+					}
 					return (1);
 				}
 				return (0);
@@ -75,6 +84,7 @@ int get_next_line(const int fd, char **line)
 			ligne[i + 1] = '\0';
 			rest = ft_strnew(ft_strlen(tmp + (i + 1)));
 			rest = ft_strcpy(rest, tmp + (i + 1));
+			rest = ft_strtrim(rest);
 			*line = ligne;
 			return (1);
 		}
@@ -87,23 +97,4 @@ int get_next_line(const int fd, char **line)
 		}
 	}
 	return (-1); 
-}
-
-int		main(int argc, char **argv)
-{
-	int		fd;
-	char	*line;
-
-	if (argc >= 2)
-	{
-		fd = open(argv[1], O_RDONLY);
-		while (get_next_line(fd, &line) == 1)
-		{
-			ft_putstr(line);
-			ft_putstr("end");
-			ft_putchar('\n');
-			free(line);
-		}
-	}
-	return (0);
 }
